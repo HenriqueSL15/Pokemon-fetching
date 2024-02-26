@@ -9,7 +9,19 @@ import {
   NavigationMenuIndicator,
   NavigationMenuViewport,
 } from './components/ui/navigation-menu';
-import { divItem } from './components/ui/divItem'
+import {
+  AlertDialog,
+  AlertDialogPortal,
+  AlertDialogOverlay,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from './components/ui/alert-dialog'
 import { Button } from "./components/ui/button"
 import { Input } from "./components/ui/input"
 import { useState, useEffect, useRef } from "react";
@@ -28,24 +40,10 @@ function App() {
   let numberOfAbilities = 0;
   let i = 0;
   let j = 0;
+  let id = [''];
+  id.shift();
   
-
-  /*const fetchData = async () => {
-    const response = await fetch(url);
-      try{
-        const responseJson = await response.json();
-        console.log(responseJson)
-        setImageUrl(responseJson.sprites.front_default)
-        setName(responseJson.name)
-        setWeight(responseJson.weight)
-        setAbilities(responseJson.abilities);
-        console.log(typeof responseJson.abilities)
-      } catch(err){
-        console.error(err)
-      }
-  }*/
-
-  function fetchData(){
+  async function fetchData(){
     fetch(url)
       .then(response => response.json())
       .then(info => {
@@ -74,24 +72,15 @@ function App() {
       .catch(error => console.log(error));
   }
 
-  useEffect(() => {
-    
-    console.log(imageUrl)
-    console.log(firstCharacter + restOfName)
-    console.log(abilities)
-  }, []);
 
   return (
     <>
-    <div className="p-6 space-y-6">
-      <div className="flex justify-center">
-        <div className="flex justify-between w-1/2">
-          <Input id="pokemonInput" placeholder="Pokemon name" className="border rounded w-1/2" value={text} onChange={(e) => setText(e.target.value)}/>
-          <Button onClick={fetchData}>Pesquisar</Button>
-        </div>
+    <div className="p-6 space-y-6 gap-5">
+      <div className='flex justify-center my-5'>
+          <Input id="pokemonInput" placeholder="Pokemon name" className="border rounded w-1/4" value={text} onChange={(e) => setText(e.target.value)}/>
+          <Button className='ml-12' onClick={fetchData}>Pesquisar</Button>
       </div>
-
-      <div className="flex justify-center">
+      <div className="flex justify-center my-5">
         <img src={imageUrl}id="pokemonImage" className="border rounded min-w-64 min-h-64 max-w-64"/>
         <div className="pl-5">
           <h1>Name: {firstCharacter + restOfName}</h1>
@@ -101,12 +90,27 @@ function App() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Habilidades:</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                <div className="p-5 min-w-[300px]">
+                <div className="p-5 min-w-[250px]">
                   {
-                    abilities.map((value,index) => {
+                    abilities.map((value) => {
                         return <>
-                        <Button className='m-1 min-w-[100px]'>{value}</Button><br />
-                        </>
+                        <AlertDialog>
+                          <AlertDialogTrigger>
+                            <Button className='m-1 min-w-[200px]'>{value}</Button><br />
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{value}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa aliquid iste ea itaque, dolore unde est. Aspernatur dignissimos ducimus libero blanditiis dolore eos itaque, debitis ex maiores quidem, odit in!
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Voltar</AlertDialogCancel>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </>
                     })
                   }
                 </div>
