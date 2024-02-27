@@ -31,6 +31,7 @@ function App() {
   const [name, setName] = useState('');
   const [weight, setWeight] = useState('');
   let [abilities, setAbilities] = useState(['']);
+  let [abilityUrl, setAbilityUrl] = useState(['']);
   const [imageUrl, setImageUrl] = useState('');
 
   const url = `https://pokeapi.co/api/v2/pokemon/${text.toLowerCase()}`;
@@ -38,8 +39,10 @@ function App() {
   let restOfName = name.slice(1);
   
   let numberOfAbilities = 0;
+
   let i = 0;
   let j = 0;
+  let k = 0;
   let id = [''];
   id.shift();
   
@@ -47,9 +50,12 @@ function App() {
     fetch(url)
       .then(response => response.json())
       .then(info => {
+        //Setting the image, name and weight of the pokemon
         setImageUrl(info.sprites.front_default)
         setName(info.name)
         setWeight(info.weight)
+
+        //Cleaning the abilities array
         numberOfAbilities = info.abilities.length;
         if(abilities[0] != ''){
           for(j = 0;j < abilities.length; j++){
@@ -57,14 +63,30 @@ function App() {
           }
           abilities.shift();
         }
+
+        //Cleaning the abilities URL's array
+        if(abilityUrl[0] != ''){
+          console.log('LIMPAR')
+          for(k = 0;k < numberOfAbilities;k++){
+            abilityUrl[k] = '';
+          }
+          abilityUrl.shift();
+        }
+
+        //Adding the URL's of the abilities
+        for(k = 0;k < numberOfAbilities;k++){
+          abilityUrl.push(info.abilities[k].ability.url);
+        }
+        abilityUrl.shift();
+
+        //Adding the names of the abilities
         for(i = 0; i < numberOfAbilities;i++){
           const abilityName = info.abilities[i].ability.name;
           const fullName = abilityName[0].toUpperCase() + abilityName.slice(1);
-          if(i == 0 && abilities[0] != ''){
-            abilities.push(fullName);
-          }else{
-            abilities.push(fullName);
-          }
+//(i == 0 && abilities[0] != ''){
+//}else{
+          abilities.push(fullName);
+//}
           console.log(fullName)
         }
         abilities.shift();
@@ -72,6 +94,9 @@ function App() {
       .catch(error => console.log(error));
   }
 
+  useEffect(() => {
+    console.log(abilityUrl)
+  },[name])
 
   return (
     <>
@@ -92,7 +117,7 @@ function App() {
                 <NavigationMenuContent>
                 <div className="p-5 min-w-[250px]">
                   {
-                    abilities.map((value) => {
+                    abilities.map((value,index) => {
                         return <>
                         <AlertDialog>
                           <AlertDialogTrigger>
@@ -102,7 +127,7 @@ function App() {
                             <AlertDialogHeader>
                               <AlertDialogTitle>{value}</AlertDialogTitle>
                               <AlertDialogDescription>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa aliquid iste ea itaque, dolore unde est. Aspernatur dignissimos ducimus libero blanditiis dolore eos itaque, debitis ex maiores quidem, odit in!
+                                {abilityUrl[index]}
                               </AlertDialogDescription>
                             </AlertDialogHeader>
                             <AlertDialogFooter>
